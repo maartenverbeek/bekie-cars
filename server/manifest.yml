@@ -1,11 +1,11 @@
   applications:
   - name: djangoapp
     routes:
-      - route: dealers.eu-gb.mybluemix.net
+      - route: bekie-cars.eu-gb.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: dealers.eu-gb.mybluemix.net/static
+      - route: bekie-cars.eu-gb.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
