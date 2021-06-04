@@ -62,25 +62,30 @@ def get_dealers_from_cf(url, **kwargs):
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 def get_dealer_reviews_by_id_from_cf(url, dealerId):
     results = []
-    json_result = get_request(url, dealerId=dealerId)
+    #json_result = get_request(url, dealerId=dealerId)
+    json_result = get_request(url)
+    #json_result = get_dealers(json_result, dealerId)
     if json_result:
         reviews = json_result['entries']
+        print("dealerId: ", dealerId)
         for review in reviews:
-            try:
-                review_obj = DealerReview(name = review["name"], 
-                dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
-                purchase_date = review["purchase_date"], car_make = review['car_make'],
-                car_model = review['car_model'], car_year= review['car_year'], sentiment= "none")
-            except:
-                review_obj = models.DealerReview(name = review["name"], 
-                dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
-                purchase_date = 'none', car_make = 'none',
-                car_model = 'none', car_year= 'none', sentiment= "none")
+            print("dealership ", review["dealership"])
+            if review["dealership"] == dealerId:
+                try:
+                    review_obj = DealerReview(name = review["name"], 
+                    dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
+                    purchase_date = review["purchase_date"], car_make = review['car_make'],
+                    car_model = review['car_model'], car_year= review['car_year'], sentiment= "none")
+                except:
+                    review_obj = DealerReview(name = review["name"], 
+                    dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
+                    purchase_date = 'none', car_make = 'none',
+                    car_model = 'none', car_year= 'none', sentiment= "none")
                 
-            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
-            print(review_obj.sentiment)
+                review_obj.sentiment = analyze_review_sentiments(review_obj.review)
+                print(review_obj)
                     
-            results.append(review_obj)
+                results.append(review_obj)
 
     return results
 # - Call get_request() with specified arguments
@@ -110,5 +115,8 @@ def analyze_review_sentiments(text):
     
     return sentimentresult
 
-
+def get_dealers(dealers, dealerId):
+    dealers_obj = json.loads(dealers)
+    dealers_filtered_obj = [dealer for dealer in dealers_obj if dealer['id'] == dealerId]
+    return json.dumps(dealers_filtered_obj)
 
