@@ -113,14 +113,15 @@ def add_review(request, dealer_id):
         # Get dealers from the URL
         context = {
             "cars": models.CarModel.objects.all(),
-            "dealers": restapis.get_dealers_from_cf(url),
+            "dealer": restapis.get_dealers_from_cf(url)[0],
         }
         return render(request, 'djangoapp/add_review.html', context)
     if request.method == "POST":
         if request.user.is_authenticated:
             form = request.POST
+            print("purchase: {}".format(form.get("purchasecheck")))
             review = {
-                "name": "{request.user.first_name} {request.user.last_name}",
+                "name": "{} {}".format(request.user.first_name,request.user.last_name).strip(),
                 "time": datetime.utcnow().isoformat(),
                 "dealership": dealer_id,
                 "review": form["content"],

@@ -42,6 +42,7 @@
     </nav>
     <main class="container">
         <form action="/djangoapp/dealer/{{dealer.id}}/add_review/" method="post">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="content">Enter the review content:</label>
                 <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
