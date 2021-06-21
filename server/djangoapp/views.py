@@ -120,23 +120,25 @@ def add_review(request, dealer_id):
         if request.user.is_authenticated:
             form = request.POST
             print("purchase: {}".format(form.get("purchasecheck")))
+            purchase = form.get("purchasecheck") == 'on'
             review = {
                 "name": "{} {}".format(request.user.first_name,request.user.last_name).strip(),
-                "time": datetime.utcnow().isoformat(),
                 "dealership": dealer_id,
                 "review": form["content"],
-                "purchase": form.get("purchasecheck"),
+                "purchase": purchase
                 }
             if form.get("purchasecheck"):
-                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
-                car = CarModel.objects.get(pk=form["car"])
+                review["purchase_date"] = form.get("purchasedate")
+                car = models.CarModel.objects.get(pk=form["car"])
                 review["car_make"] = car.carmake.name
                 review["car_model"] = car.name
                 review["car_year"]= car.year.strftime("%Y")
             json_payload = {"review": review}
-            print (json_payload)
+            print(json_payload)
             url = "https://5bc5c524.eu-gb.apigw.appdomain.cloud/api/review"
             restapis.post_request(url, json_payload, dealerId=dealer_id)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
             return redirect("/djangoapp/login")
+
+            
