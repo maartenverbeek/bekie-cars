@@ -107,16 +107,19 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
+    print("dealer_id in 'add_review': {}".format(dealer_id))
     if request.method == "GET":
         dealersid = dealer_id
         url = "https://5bc5c524.eu-gb.apigw.appdomain.cloud/api/dealership?dealerId={0}".format(dealersid)
+        print("url to get a dealership: {}".format(url))
         # Get dealers from the URL
         context = {
-            "cars": models.CarModel.objects.all(),
+            "cars": models.CarModel.objects.filter(dealerid = dealer_id),
             "dealer": restapis.get_dealers_from_cf(url)[0],
         }
         return render(request, 'djangoapp/add_review.html', context)
     if request.method == "POST":
+        print("dealer_id in 'add_review(POST)': {}".format(dealer_id))
         if request.user.is_authenticated:
             form = request.POST
             print("purchase: {}".format(form.get("purchasecheck")))
