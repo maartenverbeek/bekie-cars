@@ -8,7 +8,7 @@
 </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
             <a class="navbar-brand" href="#">Dealership Review</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -28,18 +28,25 @@
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" style="color: rgb(43, 238, 238);" href="#">{{ user.username }}</a>
+                        <a class="nav-link" style="color: rgb(43, 238, 238);" href="#">({{ user.username }})</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  style="color: rgb(43, 238, 238);" href="logout/">Logout</a>
+                        <a class="nav-link"  style="color: rgb(43, 238, 238);" href="/djangoapp/logout/">Logout</a>
                     </li>
                     <li>
                         <a class="nav-link" style="color: rgb(43, 238, 238);" href="add_review/"> Add Review</a>
                     </li>
                     {% else %}
                         <li>
-                                <a class="btn btn-link" href="/djangoapp/login/">Sign In</a>
-                                <a class="btn btn-link" href="/djangoapp/signup/">Sign Up</a>
+                            <form class="form-inline" action="/djangoapp/login/" method="post">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Username" name="username" >
+                                    <input type="password" class="form-control" placeholder="Username" name="psw" >
+                                    <button class="btn btn-primary" type="submit">Login</button>
+                                    <a class="btn btn-link" href="/djangoapp/signup/">Sign Up</a>
+                                </div>
+                            </form>
                         </li>
                     {% endif %}
                 </ul>
